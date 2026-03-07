@@ -1,0 +1,14 @@
+frontend
+│
+├── public
+│
+├── src
+│   ├── components
+│   │   ├── Login.js
+│   │   ├── Register.js
+│   │   └── Dashboard.js
+│   │
+│   ├── App.js
+│   └── index.js
+│
+└── package.json
