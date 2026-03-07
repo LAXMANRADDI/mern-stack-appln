@@ -1,0 +1,29 @@
+const User = require("../models/User");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+exports.register = async (req, res) => {
+  const { name, email, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const user = new User({
+    name,
+    email,
+    password: hashedPassword,
+    image: req.file?.filename
+  });
+
+  await user.save();
+  res.json({ message: "User Registered" });
+};
+
+exports.login = async (req, res) => {
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) return res.status(400).json("User not found");
+
+  const match = await bcrypt.compare(req.body.password, user.password);
+  if (!match) return res.status(400).json("Invalid password");
+
+  const token = jwt.sign({ id: user._id }, "secretkey");
+  res.json({ token, user });
+};
